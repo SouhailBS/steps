@@ -12,6 +12,7 @@ let bcrypt = require("bcryptjs");
 let indexRouter = require('./routes/index');
 let authRouter = require('./routes/auth');
 let usersRouter = require('./routes/users');
+let typesRouter = require('./routes/types');
 process.env.PORT = 4000;
 let app = express();
 
@@ -95,5 +96,6 @@ function initial() {
 app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/types', typesRouter);
 
 module.exports = app;

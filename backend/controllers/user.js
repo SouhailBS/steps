@@ -2,7 +2,6 @@ const db = require("../models");
 const User = db.user;
 const Role = db.role;
 
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.create = (req, res) => {
@@ -61,7 +60,7 @@ exports.update = (req, res) => {
         if (req.body.password) {
             user.password = bcrypt.hashSync(req.body.password, 8);
         }
-        user.save();
+        await user.save();
         user.password = undefined;
         res.status(200).json(user);
     });
