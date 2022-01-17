@@ -1,9 +1,25 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const { authJwt } = require("../middlewares");
+const controller = require("../controllers/user");
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+/*router.use(function(req, res, next) {
+  res.header(
+      "Access-Control-Allow-Headers",
+      "Authorization, Origin, Content-Type, Accept"
+  );
+  next();
+});*/
 
+router.get(
+    "/api/employee",
+    [authJwt.verifyToken, authJwt.isEmployee],
+    controller.employeeBoard
+);
+
+router.get(
+    "/api/admin",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.adminBoard
+);
 module.exports = router;
