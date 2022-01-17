@@ -13,6 +13,7 @@ let indexRouter = require('./routes/index');
 let authRouter = require('./routes/auth');
 let usersRouter = require('./routes/users');
 let typesRouter = require('./routes/types');
+let authorsRouter = require('./routes/authors');
 process.env.PORT = 4000;
 let app = express();
 
@@ -97,5 +98,6 @@ app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/types', typesRouter);
+app.use('/api/authors', authorsRouter);
 
 module.exports = app;
