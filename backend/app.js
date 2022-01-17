@@ -1,6 +1,5 @@
 let express = require('express');
 let path = require('path');
-let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 // Import Body parser
 let bodyParser = require('body-parser');
@@ -19,7 +18,6 @@ let app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 let corsOptions = {
     origin: "*"
@@ -95,7 +93,7 @@ function initial() {
 }
 
 app.use('/', indexRouter);
-app.use('/', authRouter);
-app.use('/', usersRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/users', usersRouter);
 
 module.exports = app;

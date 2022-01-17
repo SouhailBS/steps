@@ -7,6 +7,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.signin = (req, res) => {
+    if (!req.body.email) {
+        return res.status(400).send({message: "Bad request."});
+    }
     User.findOne({
         email: req.body.email
     })
@@ -20,8 +23,10 @@ exports.signin = (req, res) => {
             if (!user) {
                 return res.status(401).send({message: "Invalid credentials!"});
             }
-
-            var passwordIsValid = bcrypt.compareSync(
+            if (!req.body.password) {
+                return res.status(400).send({message: "Bad request."});
+            }
+            let passwordIsValid = bcrypt.compareSync(
                 req.body.password,
                 user.password
             );
@@ -41,7 +46,7 @@ exports.signin = (req, res) => {
             for (let i = 0; i < user.roles.length; i++) {
                 authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
             }
-            res.status(200).send({
+            res.status(200).json({
                 id: user._id,
                 name: user.name,
                 email: user.email,
