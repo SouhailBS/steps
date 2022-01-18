@@ -11,10 +11,7 @@ let cors = require("cors");
 let bcrypt = require("bcryptjs");
 let indexRouter = require('./routes/index');
 let authRouter = require('./routes/auth');
-let usersRouter = require('./routes/users');
-let typesRouter = require('./routes/types');
-let authorsRouter = require('./routes/authors');
-let booksRouter = require('./routes/books');
+let apiRouter = require('./routes/api');
 process.env.PORT = 4000;
 let app = express();
 
@@ -49,7 +46,6 @@ db.mongoose
         console.error("Connection error", err);
         process.exit();
     });
-
 
 function initial() {
     Role.estimatedDocumentCount((err, count) => {
@@ -97,9 +93,6 @@ function initial() {
 
 app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/types', typesRouter);
-app.use('/api/authors', authorsRouter);
-app.use('/api/books', booksRouter);
+app.use('/api', apiRouter);
 
 module.exports = app;
