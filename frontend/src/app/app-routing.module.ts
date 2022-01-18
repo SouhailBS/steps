@@ -1,13 +1,15 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { DefaultLayoutComponent } from './containers';
+import {DefaultLayoutComponent} from './containers';
 import {SigninComponent} from "./components/signin/signin.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AuthorsComponent} from "./components/authors/authors.component";
 import {TypesComponent} from "./components/types/types.component";
 import {BooksComponent} from "./components/books/books.component";
 import {UsersComponent} from "./components/users/users.component";
+import {AuthGuard} from "./services/auth.guard";
+import {Role} from "./models/role";
 
 const routes: Routes = [
   {
@@ -24,28 +26,37 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [AuthGuard],
       },
       {
         path: 'authors',
-        component: AuthorsComponent
+        component: AuthorsComponent,
+        canActivate: [AuthGuard],
+        data: {roles: [Role.Admin, Role.Employee]}
       },
       {
         path: 'types',
-        component: TypesComponent
+        component: TypesComponent,
+        canActivate: [AuthGuard],
+        data: {roles: [Role.Admin, Role.Employee]}
       },
       {
         path: 'books',
-        component: BooksComponent
+        component: BooksComponent,
+        canActivate: [AuthGuard],
+        data: {roles: [Role.Admin, Role.Employee]}
       },
       {
         path: 'users',
-        component: UsersComponent
+        component: UsersComponent,
+        canActivate: [AuthGuard],
+        data: {roles: [Role.Admin]}
       },
     ]
   },
   {
-    path: 'login',
+    path: 'signin',
     component: SigninComponent,
     data: {
       title: 'Login Page'

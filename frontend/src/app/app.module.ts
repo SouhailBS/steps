@@ -24,6 +24,7 @@ import {
 } from './containers';
 
 import {
+  AlertModule,
   AvatarModule,
   BadgeModule,
   BreadcrumbModule,
@@ -51,6 +52,8 @@ import { UsersComponent } from './components/users/users.component';
 import { TypesComponent } from './components/types/types.component';
 import { AuthorsComponent } from './components/authors/authors.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import {AuthGuard} from "./services/auth.guard";
+import {HttpClientModule} from "@angular/common/http";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -91,6 +94,8 @@ const APP_CONTAINERS = [
     BadgeModule,
     ListGroupModule,
     CardModule,
+    HttpClientModule,
+    AlertModule,
   ],
   providers: [
     {
@@ -102,7 +107,8 @@ const APP_CONTAINERS = [
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
     IconSetService,
-    Title
+    Title,
+    AuthGuard
   ],
   bootstrap: [AppComponent],
 })

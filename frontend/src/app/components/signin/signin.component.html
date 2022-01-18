@@ -1,1 +1,55 @@
-<p>signin works!</p>
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col md="5">
+        <c-card-group>
+          <c-card class="p-4">
+            <c-card-body>
+              <form cForm [formGroup]="form" (ngSubmit)="login()"
+                    [validated]="isValidated"
+                    novalidate
+                    class="needs-validation">
+                <h1>Login</h1>
+                <p class="text-medium-emphasis">Sign In to your account</p>
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilUser"></svg>
+                  </span>
+                  <input formControlName="email" required type="email" autoComplete="email" cFormControl
+                         placeholder="Email address"/>
+                  <c-form-feedback [valid]="false">Please write a valid email address.</c-form-feedback>
+                </c-input-group>
+                <c-input-group class="mb-4">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input
+                    formControlName="password"
+                    required
+                    autoComplete="current-password"
+                    cFormControl
+                    placeholder="Password"
+                    type="password"
+                  />
+                  <c-form-feedback [valid]="false">Please write your password.</c-form-feedback>
+                </c-input-group>
+                <c-row>
+                  <c-col xs="6">
+                    <button [disabled]="isSubmitting" cButton type="submit" class="px-4" color="primary">
+                      Login
+                    </button>
+                  </c-col>
+                </c-row>
+                <c-row>
+                  <c-col xs="12">
+                    <c-alert variant="solid" color="danger" *ngIf="error" class="mt-1">{{error}}</c-alert>
+                  </c-col>
+                </c-row>
+              </form>
+            </c-card-body>
+          </c-card>
+        </c-card-group>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
