@@ -18,7 +18,7 @@
           Dashboard
         </a>
       </c-nav-item>
-      <c-nav-item>
+      <c-nav-item *ngIf="isAdmin()">
         <a cNavLink routerLink="/users" routerLinkActive="active">Users</a>
       </c-nav-item>
 
@@ -56,15 +56,15 @@
     </button>
     <ul cDropdownMenu class="pt-0 pr-5 w-auto">
       <li>
-        <h6 cDropdownHeader class="bg-light fw-semibold py-2">Flen Ben Foulen </h6>
+        <h6 cDropdownHeader class="bg-light fw-semibold py-2">{{user.name}}</h6>
       </li>
       <li>
         <hr cDropdownDivider/>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a cButton (click)="logout()" cDropdownItem>
           <svg cIcon class="me-2" name="cilLockLocked"></svg>
-          Lock Account
+          Logout
         </a>
       </li>
       <li></li>

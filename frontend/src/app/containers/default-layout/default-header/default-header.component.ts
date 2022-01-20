@@ -1,7 +1,10 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import {Component, Input} from '@angular/core';
 
-import { ClassToggleService, HeaderComponent } from '@coreui/angular';
+import {HeaderComponent} from '@coreui/angular';
+import {User} from "../../../models/user";
+import {AuthService} from "../../../services/auth.service";
+import {Router} from "@angular/router";
+import {Role} from "../../../models/role";
 
 @Component({
   selector: 'app-default-header',
@@ -10,12 +13,21 @@ import { ClassToggleService, HeaderComponent } from '@coreui/angular';
 export class DefaultHeaderComponent extends HeaderComponent {
 
   @Input() sidebarId: string = "sidebar";
+  public user: User;
 
-  public newMessages = new Array(4)
-  public newTasks = new Array(5)
-  public newNotifications = new Array(5)
-
-  constructor(private classToggler: ClassToggleService) {
+  constructor(
+    private router: Router,
+    private auth: AuthService) {
     super();
+    this.user = auth.currentUserValue;
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/']);
+  }
+
+  isAdmin() {
+    return this.user.roles.includes(Role.Admin);
   }
 }
