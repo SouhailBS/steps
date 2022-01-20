@@ -36,7 +36,7 @@ import {
   FormModule,
   GridModule,
   HeaderModule,
-  ListGroupModule,
+  ListGroupModule, ModalModule,
   NavModule,
   ProgressModule,
   SharedModule,
@@ -53,7 +53,10 @@ import { TypesComponent } from './components/types/types.component';
 import { AuthorsComponent } from './components/authors/authors.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {AuthGuard} from "./services/auth.guard";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {AppMaterialModule} from "./app.material-module";
+import {JwtInterceptor} from "./services/jwt.interceptor";
+import {ErrorInterceptor} from "./services/error.interceptor";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -96,6 +99,8 @@ const APP_CONTAINERS = [
     CardModule,
     HttpClientModule,
     AlertModule,
+    AppMaterialModule,
+    ModalModule,
   ],
   providers: [
     {
@@ -106,6 +111,8 @@ const APP_CONTAINERS = [
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     IconSetService,
     Title,
     AuthGuard
