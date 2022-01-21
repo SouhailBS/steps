@@ -1,1 +1,146 @@
-<p>users works!</p>
+<c-row ngPreserveWhitespaces>
+
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-body>
+        <button mat-raised-button (click)="openAddEditDialog()" class="demo-button">
+          Add new user
+        </button>
+        <mat-form-field appearance="standard">
+          <mat-label>Search</mat-label>
+          <input autocomplete="no" matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+        </mat-form-field>
+
+        <div class="mat-elevation-z0">
+          <table mat-table [dataSource]="dataSource" matSort>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="_id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
+              <td mat-cell *matCellDef="let row"> {{row._id}} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
+              <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Email</th>
+              <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef> Action</th>
+              <td mat-cell *matCellDef="let element" class="action-link">
+                <button size="sm" (click)="openAddEditDialog(element)" cButton>Edit</button>
+                <button size="sm" color="danger" (click)="openDeleteDialog(element)" cButton>Delete</button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            </tr>
+
+            <!-- Row shown when there is no data. -->
+            <tr class="mat-row" *ngIf="dataSource.data.length===0">
+              <td class="mat-cell" colspan="4">No data available"</td>
+            </tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        </div>
+
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+<c-modal
+  (visibleChange)="visibleAddEditModal=$event"
+  [keyboard]="false"
+  [transition]="false"
+  [visible]="visibleAddEditModal"
+  alignment="center"
+  backdrop="static"
+  id="modalUser"
+>
+  <c-modal-header>
+    <h5 cModalTitle *ngIf="user">Edit user id: {{user._id}}</h5>
+    <h5 cModalTitle *ngIf="!user">New user</h5>
+    <button (click)="visibleAddEditModal=false" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <form cForm [formGroup]="form" [validated]="isValidated">
+      <div class="mb-3">
+        <label cLabel for="name">Name</label>
+        <input [value]="user?.name"
+               cFormControl
+               formControlName="name"
+               id="name"
+               placeholder="User name"
+               required
+               type="text"
+        />
+        <c-form-feedback [valid]="false">This field is required.</c-form-feedback>
+      </div>
+      <div class="mb-3">
+        <label cLabel for="email">Email</label>
+        <input [value]="user?.email"
+               cFormControl
+               formControlName="email"
+               id="email"
+               placeholder="User email"
+               required
+               type="email"
+        />
+        <c-form-feedback [valid]="false">This field is required.</c-form-feedback>
+      </div>
+      <div class="mb-3">
+        <label cLabel for="password">Password</label>
+        <input
+          cFormControl
+          formControlName="password"
+          id="password"
+          placeholder="User password"
+          required
+          type="password"
+        />
+        <c-form-feedback [valid]="false">This field is required.</c-form-feedback>
+      </div>
+    </form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button size="sm" cButton (click)="visibleAddEditModal=false" color="secondary">Close</button>
+    <button size="sm" cButton [disabled]="isSubmitting" (click)="save()" color="primary">Save</button>
+  </c-modal-footer>
+</c-modal>
+
+<c-modal
+  (visibleChange)="visibleDeleteModal=$event"
+  [keyboard]="false"
+  [transition]="false"
+  [visible]="visibleDeleteModal"
+  alignment="center"
+  backdrop="static"
+  id="modalDeleteUser"
+>
+  <c-modal-header>
+    <h5 cModalTitle *ngIf="user">Delete user id: {{user._id}}</h5>
+    <button (click)="visibleDeleteModal=false" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    Name: {{user?.name}}
+  </c-modal-body>
+  <c-modal-footer>
+    <button size="sm" cButton (click)="visibleDeleteModal=false" color="secondary">Close</button>
+    <button size="sm" color="danger" cButton [disabled]="isSubmitting" (click)="delete()" color="primary">Delete
+    </button>
+  </c-modal-footer>
+</c-modal>
