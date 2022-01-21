@@ -20,16 +20,16 @@ exports.create = async (req, res) => {
         published_at: Date.parse(req.body.published_at)
     });
 
-    book.save((err, book) => {
+    book.save(async (err, book) => {
         if (err) {
             res.status(500).send({message: err});
             return;
         }
-        res.status(200).json(book);
+        res.status(200).json(await book.populate(['author', 'type']));
     });
 };
 exports.read = async (req, res) => {
-    res.status(200).json(await Book.find());
+    res.status(200).json(await Book.find().populate(['author', 'type']));
 };
 exports.update = (req, res) => {
     Book.findById(req.params.id, async (err, book) => {
