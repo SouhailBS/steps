@@ -28,7 +28,7 @@ exports.create = (req, res) => {
                     return;
                 }
 
-                res.send({message: "User was registered successfully!"});
+                res.json(user);
             });
         });
     });
