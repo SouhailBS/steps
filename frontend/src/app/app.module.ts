@@ -42,7 +42,7 @@ import {
   SharedModule,
   SidebarModule,
   TabsModule,
-  UtilitiesModule,
+  UtilitiesModule, WidgetModule,
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
@@ -77,7 +77,6 @@ const APP_CONTAINERS = [
     AvatarModule,
     BreadcrumbModule,
     FooterModule,
-    DropdownModule,
     GridModule,
     HeaderModule,
     SidebarModule,
@@ -90,17 +89,15 @@ const APP_CONTAINERS = [
     ButtonGroupModule,
     ReactiveFormsModule,
     SidebarModule,
+    DropdownModule,
     SharedModule,
-    TabsModule,
-    ListGroupModule,
-    ProgressModule,
-    BadgeModule,
     ListGroupModule,
     CardModule,
     HttpClientModule,
     AlertModule,
     AppMaterialModule,
     ModalModule,
+    WidgetModule,
   ],
   providers: [
     {

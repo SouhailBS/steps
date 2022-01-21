@@ -1,1 +1,47 @@
-<p>dashboard works!</p>
+<c-row>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      class="mb-4"
+      color="primary"
+      title="Authors"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{authors}}</span>
+      </ng-template>
+
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      title="Types"
+      class="mb-4"
+      color="info"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{types}}</span>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      title="Books"
+      class="mb-4"
+      color="warning"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{books}}</span>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col *ngIf="isAdmin()" sm="6" xl="3">
+    <c-widget-stat-a
+      title="Users"
+      class="mb-4"
+      color="danger"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{users}}</span>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+</c-row>
