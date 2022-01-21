@@ -49,11 +49,12 @@ export class AuthorsComponent implements OnInit {
     }
   }
 
-  openAddEditDialog(author: Author = {} as Author) {
+  openAddEditDialog(author?: Author) {
     this.form.reset();
     this.isValidated = false;
     this.visibleAddEditModal = true;
-    this.author = author;
+    this.form.patchValue({name: author?.name});
+    this.author = author!;
   }
 
   openDeleteDialog(author: Author) {

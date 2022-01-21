@@ -55,6 +55,7 @@ export class UsersComponent implements OnInit {
     this.form.reset();
     this.isValidated = false;
     this.visibleAddEditModal = true;
+    this.form.patchValue({name: user?.name, email: user?.email});
     this.user = user;
   }
 

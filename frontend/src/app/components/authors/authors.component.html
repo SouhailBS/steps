@@ -74,8 +74,7 @@
     <form cForm [formGroup]="form" [validated]="isValidated">
       <div class="mb-3">
         <label cLabel for="name">Name</label>
-        <input [value]="author?.name"
-               cFormControl
+        <input cFormControl
                formControlName="name"
                id="name"
                placeholder="Author name"

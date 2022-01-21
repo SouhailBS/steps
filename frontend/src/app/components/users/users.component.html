@@ -80,8 +80,7 @@
     <form cForm [formGroup]="form" [validated]="isValidated">
       <div class="mb-3">
         <label cLabel for="name">Name</label>
-        <input [value]="user?.name"
-               cFormControl
+        <input cFormControl
                formControlName="name"
                id="name"
                placeholder="User name"
@@ -92,8 +91,7 @@
       </div>
       <div class="mb-3">
         <label cLabel for="email">Email</label>
-        <input [value]="user?.email"
-               cFormControl
+        <input cFormControl
                formControlName="email"
                id="email"
                placeholder="User email"
@@ -109,7 +107,7 @@
           formControlName="password"
           id="password"
           placeholder="User password"
-          required
+          [required]="!user"
           type="password"
         />
         <c-form-feedback [valid]="false">This field is required.</c-form-feedback>

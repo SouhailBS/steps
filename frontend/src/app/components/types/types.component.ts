@@ -55,6 +55,7 @@ export class TypesComponent implements OnInit {
     this.form.reset();
     this.isValidated = false;
     this.visibleAddEditModal = true;
+    this.form.patchValue({name: type?.name});
     this.type = type;
   }
 
