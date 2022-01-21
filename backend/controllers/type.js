@@ -7,7 +7,7 @@ exports.create = (req, res) => {
     });
     type.save((err, type) => {
         if (err) {
-            res.status(500).send({message: err});
+            res.status(500).json({message: err});
             return;
         }
         res.status(200).json(type);
@@ -19,7 +19,7 @@ exports.read = async (req, res) => {
 exports.update = (req, res) => {
     Type.findById(req.params.id, async (err, type) => {
         if (err) {
-            res.status(500).send({message: err});
+            res.status(500).json({message: err});
             return;
         }
         if (req.body.name) {
@@ -32,7 +32,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     Type.findById(req.params.id, async (err, type) => {
         if (err) {
-            res.status(500).send({message: err});
+            res.status(500).json({message: err});
             return;
         }
 

@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 
 exports.signin = (req, res) => {
     if (!req.body.email) {
-        return res.status(400).send({message: "Bad request."});
+        return res.status(400).json({message: "Bad request."});
     }
     User.findOne({
         email: req.body.email
@@ -16,15 +16,15 @@ exports.signin = (req, res) => {
         .populate("roles", "-__v")
         .exec((err, user) => {
             if (err) {
-                res.status(500).send({message: err});
+                res.status(500).json({message: err});
                 return;
             }
 
             if (!user) {
-                return res.status(401).send({message: "Invalid credentials!"});
+                return res.status(401).json({message: "Invalid credentials!"});
             }
             if (!req.body.password) {
-                return res.status(400).send({message: "Bad request."});
+                return res.status(400).json({message: "Bad request."});
             }
             let passwordIsValid = bcrypt.compareSync(
                 req.body.password,
@@ -32,7 +32,7 @@ exports.signin = (req, res) => {
             );
 
             if (!passwordIsValid) {
-                return res.status(401).send({
+                return res.status(401).json({
                     message: "Invalid credentials!"
                 });
             }

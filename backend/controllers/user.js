@@ -11,20 +11,20 @@ exports.create = (req, res) => {
 
     user.save((err, user) => {
         if (err) {
-            res.status(500).send({message: err});
+            res.status(500).json({message: err});
             return;
         }
 
         Role.findOne({name: "employee"}, (err, role) => {
             if (err) {
-                res.status(500).send({message: err});
+                res.status(500).json({message: err});
                 return;
             }
 
             user.roles = [role._id];
             user.save(err => {
                 if (err) {
-                    res.status(500).send({message: err});
+                    res.status(500).json({message: err});
                     return;
                 }
 
@@ -52,7 +52,7 @@ exports.update = (req, res) => {
         if (req.body.email) {
             const _user = (await User.findOne({email: req.body.email}))
             if (user.email !== req.body.email && _user) {
-                res.status(400).send({message: "Failed! Email '" + req.body.email + "' is already in use!"});
+                res.status(400).json({message: "Failed! Email '" + req.body.email + "' is already in use!"});
                 return;
             }
             user.email = req.body.email;
@@ -72,11 +72,11 @@ exports.delete = (req, res) => {
             return;
         }
         if (user.roles.includes((await Role.findOne({name: "admin"}))._id.toHexString())) {
-            res.status(200).send("Admin user can't be deleted.");
+            res.status(400).json({message: "Admin user can't be deleted."});
             return;
         }
         await user.delete();
-        res.status(200).send("User deleted.");
+        res.status(200).json("User deleted.");
     });
 };
 exports.me = async (req, res) => {
