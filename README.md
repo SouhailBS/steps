@@ -10,7 +10,7 @@ Application web de gestion d'un bibliothèque en ligne
 # Tips
 1) The REST API server is listening on port 8080 and can be changed in the **.env** file.
 2) The web application server is listening on port 8000 and can be changed in the **.env** file.
-
+----------------------
 # Installation:
 
 1) `git clone https://github.com/SouhailBS/steps`
