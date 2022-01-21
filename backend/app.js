@@ -12,8 +12,12 @@ let bcrypt = require("bcryptjs");
 let indexRouter = require('./routes/index');
 let authRouter = require('./routes/auth');
 let apiRouter = require('./routes/api');
-process.env.PORT = 4000;
+require("dotenv").config();
 let app = express();
+const PORT = process.env.NODE_DOCKER_PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}.`);
+});
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -33,62 +37,43 @@ const dbConfig = require("./config/db");
 const Role = db.role;
 const User = db.user;
 
-db.mongoose
-    .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => {
+db.mongoose.connect(dbConfig.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+    .then(async () => {
         console.log("Successfully connect to MongoDB.");
-        initial();
+        await initial();
     })
     .catch(err => {
         console.error("Connection error", err);
         process.exit();
     });
 
-function initial() {
-    Role.estimatedDocumentCount((err, count) => {
-        if (!err && count === 0) {
-            new Role({
-                name: "employee"
-            }).save(err => {
-                if (err) {
-                    console.log("error", err);
-                }
+async function initial() {
+    if ((await Role.countDocuments()) === 0) {
+        await new Role({
+            name: "employee"
+        }).save();
+        console.log("added 'employee' to roles collection");
 
-                console.log("added 'employee' to roles collection");
-            });
+        await new Role({
+            name: "admin"
+        }).save();
+        console.log("added 'admin' to roles collection");
+    }
 
-            new Role({
-                name: "admin"
-            }).save(err => {
-                if (err) {
-                    console.log("error", err);
-                }
+    if ((await User.countDocuments()) === 0) {
+        await new User({
+            name: process.env.USER_NAME,
+            email: process.env.USER_EMAIL,
+            password: bcrypt.hashSync(process.env.USER_PASSWORD, 8),
+            roles:
+                await Role.find().distinct("_id")
 
-                console.log("added 'admin' to roles collection");
-            });
-        }
-    });
-    User.estimatedDocumentCount(async (err, count) => {
-        if (!err && count === 0) {
-            await new User({
-                name: "Souhail BEN SLIMENE",
-                email: "souhail.b.slimene@gmail.com",
-                password: bcrypt.hashSync('admin', 8),
-                roles:
-                    await Role.find().distinct("_id")
-
-            }).save(err => {
-                if (err) {
-                    console.log("error", err);
-                }
-
-                console.log("added 'admin' to users collection");
-            });
-        }
-    });
+        }).save();
+        console.log("added " + process.env.USER_EMAIL + " as admin user collection");
+    }
 }
 
 app.use('/', indexRouter);
