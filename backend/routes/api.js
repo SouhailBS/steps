@@ -28,7 +28,7 @@ router.route("/users")
     ],
     user.create
 );
-router.route("/users")
+router.route("/users/:id")
     .put([
             authJwt.verifyToken,
             authJwt.isAdmin,
