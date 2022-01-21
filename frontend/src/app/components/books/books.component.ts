@@ -94,12 +94,14 @@ export class BooksComponent implements OnInit {
         this.form.get('type')?.value,
         this.form.get('author')?.value,
         this.form.get('published_at')?.value
-      ).subscribe(value => {
-        this.isSubmitting = false;
-        this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.book?._id)] = value;
-        this.dataSource.data = [...this.dataSource.data];
+      ).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.book?._id)] = value;
+          this.dataSource.data = [...this.dataSource.data];
 
-        this.visibleAddEditModal = false;
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
       })
     } else {
       this.api.addBook(
@@ -107,12 +109,14 @@ export class BooksComponent implements OnInit {
         this.form.get('type')?.value,
         this.form.get('author')?.value,
         this.form.get('published_at')?.value
-      ).subscribe(value => {
-        this.isSubmitting = false;
-        let data = this.dataSource.data;
-        data.unshift(value);
-        this.dataSource.data = data;
-        this.visibleAddEditModal = false;
+      ).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          let data = this.dataSource.data;
+          data.unshift(value);
+          this.dataSource.data = data;
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
       })
     }
   }
@@ -120,12 +124,14 @@ export class BooksComponent implements OnInit {
   delete() {
     this.isValidated = true;
     this.isSubmitting = true;
-    this.api.deleteBook(this.book!._id).subscribe(value => {
-      this.isSubmitting = false;
-      this.visibleDeleteModal = false;
-      let index = this.dataSource.data.findIndex(x => x._id == this.book?._id);
-      this.dataSource.data.splice(index, 1)
-      this.dataSource.data = [...this.dataSource.data];
+    this.api.deleteBook(this.book!._id).subscribe({
+      next: value => {
+        this.isSubmitting = false;
+        this.visibleDeleteModal = false;
+        let index = this.dataSource.data.findIndex(x => x._id == this.book?._id);
+        this.dataSource.data.splice(index, 1)
+        this.dataSource.data = [...this.dataSource.data];
+      }, error: error => this.isSubmitting = false
     });
   }
 

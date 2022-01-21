@@ -3,9 +3,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {ApiService} from "../../services/api.service";
-import {map, Observable, ReplaySubject} from "rxjs";
 import {Author} from "../../models/author";
-import {DataSource} from "@angular/cdk/collections";
 import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
@@ -21,7 +19,7 @@ export class AuthorsComponent implements OnInit {
   public dataSource: MatTableDataSource<Author> = new MatTableDataSource<Author>();
   public visibleDeleteModal: boolean = false;
   public visibleAddEditModal: boolean = false;
-  public author?: Author;
+  public author: Author = {} as Author;
   public form: FormGroup = new FormGroup({
     name: new FormControl(),
   });
@@ -51,7 +49,7 @@ export class AuthorsComponent implements OnInit {
     }
   }
 
-  openAddEditDialog(author?: Author) {
+  openAddEditDialog(author: Author = {} as Author) {
     this.form.reset();
     this.isValidated = false;
     this.visibleAddEditModal = true;
@@ -68,33 +66,38 @@ export class AuthorsComponent implements OnInit {
     if (this.form.invalid) return;
     this.isSubmitting = true;
     if (this.author) {
-      this.api.editAuthor(this.form.controls['name'].value, this.author._id).subscribe(value => {
-        this.isSubmitting = false;
-        this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.author?._id)] = value;
-        this.dataSource.data = [...this.dataSource.data];
-
-        this.visibleAddEditModal = false;
-      })
+      this.api.editAuthor(this.form.controls['name'].value, this.author._id).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.author?._id)] = value;
+          this.dataSource.data = [...this.dataSource.data];
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
+      });
     } else {
-      this.api.addAuthor(this.form.controls['name'].value).subscribe(value => {
-        this.isSubmitting = false;
-        let data = this.dataSource.data;
-        data.unshift(value);
-        this.dataSource.data = data;
-        this.visibleAddEditModal = false;
-      })
+      this.api.addAuthor(this.form.controls['name'].value).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          let data = this.dataSource.data;
+          data.unshift(value);
+          this.dataSource.data = data;
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
+      });
     }
   }
 
   delete() {
     this.isValidated = true;
     this.isSubmitting = true;
-    this.api.deleteAuthor(this.author!._id).subscribe(value => {
-      this.isSubmitting = false;
-      this.visibleDeleteModal = false;
-      let index = this.dataSource.data.findIndex(x => x._id == this.author?._id);
-      this.dataSource.data.splice(index, 1)
-      this.dataSource.data = [...this.dataSource.data];
+    this.api.deleteAuthor(this.author!._id).subscribe({
+      next: value => {
+        this.isSubmitting = false;
+        this.visibleDeleteModal = false;
+        let index = this.dataSource.data.findIndex(x => x._id == this.author?._id);
+        this.dataSource.data.splice(index, 1)
+        this.dataSource.data = [...this.dataSource.data];
+      }, error: error => this.isSubmitting = false
     });
   }
 

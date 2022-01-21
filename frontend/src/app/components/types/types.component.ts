@@ -68,20 +68,24 @@ export class TypesComponent implements OnInit {
     if (this.form.invalid) return;
     this.isSubmitting = true;
     if (this.type) {
-      this.api.editType(this.form.controls['name'].value, this.type._id).subscribe(value => {
-        this.isSubmitting = false;
-        this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.type?._id)] = value;
-        this.dataSource.data = [...this.dataSource.data];
+      this.api.editType(this.form.controls['name'].value, this.type._id).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.type?._id)] = value;
+          this.dataSource.data = [...this.dataSource.data];
 
-        this.visibleAddEditModal = false;
-      })
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
+      });
     } else {
-      this.api.addType(this.form.controls['name'].value).subscribe(value => {
-        this.isSubmitting = false;
-        let data = this.dataSource.data;
-        data.unshift(value);
-        this.dataSource.data = data;
-        this.visibleAddEditModal = false;
+      this.api.addType(this.form.controls['name'].value).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          let data = this.dataSource.data;
+          data.unshift(value);
+          this.dataSource.data = data;
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
       })
     }
   }
@@ -89,13 +93,14 @@ export class TypesComponent implements OnInit {
   delete() {
     this.isValidated = true;
     this.isSubmitting = true;
-    this.api.deleteType(this.type!._id).subscribe(value => {
-      this.isSubmitting = false;
-      this.visibleDeleteModal = false;
-      let index = this.dataSource.data.findIndex(x => x._id == this.type?._id);
-      this.dataSource.data.splice(index, 1)
-      this.dataSource.data = [...this.dataSource.data];
+    this.api.deleteType(this.type!._id).subscribe({
+      next: value => {
+        this.isSubmitting = false;
+        this.visibleDeleteModal = false;
+        let index = this.dataSource.data.findIndex(x => x._id == this.type?._id);
+        this.dataSource.data.splice(index, 1)
+        this.dataSource.data = [...this.dataSource.data];
+      }, error: error => this.isSubmitting = false
     });
   }
-
 }

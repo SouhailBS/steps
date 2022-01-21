@@ -68,21 +68,32 @@ export class UsersComponent implements OnInit {
     if (this.form.invalid) return;
     this.isSubmitting = true;
     if (this.user) {
-      this.api.editUser(this.user._id, this.form.controls['name'].value, this.form.controls['email'].value, this.form.controls['password'].value == '' ? undefined : this.form.controls['password'].value).subscribe(value => {
-        this.isSubmitting = false;
-        this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.user?._id)] = value;
-        this.dataSource.data = [...this.dataSource.data];
-
-        this.visibleAddEditModal = false;
-      })
+      this.api.editUser(
+        this.user._id, this.form.controls['name'].value,
+        this.form.controls['email'].value,
+        this.form.controls['password'].value == '' ? undefined : this.form.controls['password'].value
+      ).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          this.dataSource.data[this.dataSource.data.findIndex(x => x._id == this.user?._id)] = value;
+          this.dataSource.data = [...this.dataSource.data];
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
+      });
     } else {
-      this.api.addUser(this.form.controls['name'].value, this.form.controls['email'].value, this.form.controls['password'].value).subscribe(value => {
-        this.isSubmitting = false;
-        let data = this.dataSource.data;
-        data.unshift(value);
-        this.dataSource.data = data;
-        this.visibleAddEditModal = false;
-      })
+      this.api.addUser(
+        this.form.controls['name'].value,
+        this.form.controls['email'].value,
+        this.form.controls['password'].value
+      ).subscribe({
+        next: value => {
+          this.isSubmitting = false;
+          let data = this.dataSource.data;
+          data.unshift(value);
+          this.dataSource.data = data;
+          this.visibleAddEditModal = false;
+        }, error: error => this.isSubmitting = false
+      });
     }
   }
 
@@ -95,7 +106,7 @@ export class UsersComponent implements OnInit {
       let index = this.dataSource.data.findIndex(x => x._id == this.user?._id);
       this.dataSource.data.splice(index, 1)
       this.dataSource.data = [...this.dataSource.data];
-    });
+    }, error => this.isSubmitting = false);
   }
 
 }
