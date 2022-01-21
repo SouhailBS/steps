@@ -31,33 +31,34 @@ exports.create = async (req, res) => {
 exports.read = async (req, res) => {
     res.status(200).json(await Book.find().populate(['author', 'type']));
 };
-exports.update = (req, res) => {
-    Book.findById(req.params.id, async (err, book) => {
+exports.update = async (req, res) => {
+    const book = {};
+    if (req.body.title) {
+        book.name = req.body.title;
+    }
+    if (req.body.published_at) {
+        book.name = Date.parse(req.body.published_at);
+    }
+    if (req.body.author) {
+        if (!(await Author.exists({_id: req.body.author}))) {
+            res.status(400).send("Author not found.");
+            return;
+        }
+        book.author = req.body.author;
+    }
+    if (req.body.type) {
+        if (!(await Type.exists({_id: req.body.type}))) {
+            res.status(400).send("Type not found.");
+            return;
+        }
+        book.type = req.body.type;
+    }
+    Book.findByIdAndUpdate(req.params.id, req.body, async (err, book) => {
         if (err) {
             res.status(500).send({message: err});
             return;
         }
-        if (req.body.title) {
-            book.name = req.body.title;
-        }if (req.body.published_at) {
-            book.name = Date.parse(req.body.published_at);
-        }
-        if (req.body.author) {
-            if (!(await Author.exists({_id: req.body.author}))) {
-                res.status(400).send("Author not found.");
-                return;
-            }
-            book.author = req.body.author;
-        }
-        if (req.body.type) {
-            if (!(await Type.exists({_id: req.body.type}))) {
-                res.status(400).send("Type not found.");
-                return;
-            }
-            book.type = req.body.type;
-        }
-        await book.save();
-        res.status(200).json(book);
+        res.status(200).json(await Book.findById(req.params.id).populate(['author', 'type']));
     });
 };
 exports.delete = (req, res) => {
