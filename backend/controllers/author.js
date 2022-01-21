@@ -1,4 +1,5 @@
 const db = require("../models");
+const Book = db.book;
 const Author = db.author;
 
 exports.create = (req, res) => {
@@ -33,7 +34,11 @@ exports.delete = (req, res) => {
             res.status(500).json({message: err});
             return;
         }
-
+        let bookCount = await Book.countDocuments({author: author._id});
+        if (bookCount > 0) {
+            res.status(400).json({message: "This author still has " + bookCount + " more books"});
+            return;
+        }
         await author.delete();
         res.status(200).json(author);
     });

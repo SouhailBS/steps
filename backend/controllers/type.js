@@ -1,5 +1,6 @@
 const db = require("../models");
 const Type = db.type;
+const Book = db.book;
 
 exports.create = (req, res) => {
     const type = new Type({
@@ -35,7 +36,11 @@ exports.delete = (req, res) => {
             res.status(500).json({message: err});
             return;
         }
-
+        let bookCount = await Book.countDocuments({type: type._id});
+        if (bookCount > 0) {
+            res.status(400).json({message: "There is " + bookCount + " more books in this type"});
+            return;
+        }
         await type.delete();
         res.status(200).json(type);
     });
